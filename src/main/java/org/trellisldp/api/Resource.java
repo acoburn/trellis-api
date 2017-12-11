@@ -14,11 +14,14 @@
 package org.trellisldp.api;
 
 import static java.util.Collections.singleton;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static java.util.Optional.empty;
 
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -142,13 +145,24 @@ public interface Resource {
     }
 
     /**
+     * Get any extra implementation-defined link relations for this resource.
+     *
+     * @return a map of relation types
+     */
+    default Map<String, List<String>> getExtraLinkRelations() {
+        return emptyMap();
+    }
+
+    /**
      * Get the ldp:inbox for this resource, if one exists
      *
      * <p>Note: if an ldp:inbox value does not exist for this resource,
      * an empty {@link Optional} value will be returned.</p>
      *
      * @return the ldp:inbox IRI
+     * @deprecated use {@link getExtraLinkRelations} instead.
      */
+    @Deprecated
     default Optional<IRI> getInbox() {
         return empty();
     }
@@ -156,8 +170,12 @@ public interface Resource {
     /**
      * Get the rdf:type(s) for this resource
      * @return a collection of RDF Types
+     * @deprecated use {@link getExtraLinkRelations} instead.
      */
-    Collection<IRI> getTypes();
+    @Deprecated
+    default Collection<IRI> getTypes() {
+        return emptyList();
+    }
 
     /**
      * Get the IRI for the resource's annotation service
@@ -166,7 +184,9 @@ public interface Resource {
      * an empty {@link Optional} value will be returned.</p>
      *
      * @return the annotation service
+     * @deprecated use {@link getExtraLinkRelations} instead.
      */
+    @Deprecated
     default Optional<IRI> getAnnotationService() {
         return empty();
     }
