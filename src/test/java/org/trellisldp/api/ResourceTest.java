@@ -18,6 +18,7 @@ import static java.util.stream.Stream.empty;
 import static java.util.stream.Stream.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.Mockito.doCallRealMethod;
@@ -51,6 +52,7 @@ public class ResourceTest {
     private Resource mockResource;
 
     @BeforeEach
+    @SuppressWarnings("deprecation")
     public void setUp() {
         initMocks(this);
         doCallRealMethod().when(mockResource).getMembershipResource();
@@ -63,11 +65,14 @@ public class ResourceTest {
         doCallRealMethod().when(mockResource).isMemento();
         doCallRealMethod().when(mockResource).getInbox();
         doCallRealMethod().when(mockResource).getAnnotationService();
+        doCallRealMethod().when(mockResource).getTypes();
+        doCallRealMethod().when(mockResource).getExtraLinkRelations();
 
         when(mockResource.stream()).thenAnswer((x) -> empty());
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testResource() {
         assertEquals(0L, mockResource.stream(prefer).count());
         assertEquals(0L, mockResource.stream(singleton(prefer)).count());
@@ -80,9 +85,12 @@ public class ResourceTest {
         assertFalse(mockResource.isMemento());
         assertFalse(mockResource.getInbox().isPresent());
         assertFalse(mockResource.getAnnotationService().isPresent());
+        assertTrue(mockResource.getTypes().isEmpty());
+        assertTrue(mockResource.getExtraLinkRelations().isEmpty());
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testResource2() {
         final IRI subject = rdf.createIRI("ex:subject");
         when(mockResource.stream()).thenAnswer((x) -> of(
@@ -100,5 +108,7 @@ public class ResourceTest {
         assertFalse(mockResource.isMemento());
         assertFalse(mockResource.getInbox().isPresent());
         assertFalse(mockResource.getAnnotationService().isPresent());
+        assertTrue(mockResource.getTypes().isEmpty());
+        assertTrue(mockResource.getExtraLinkRelations().isEmpty());
     }
 }
